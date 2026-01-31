@@ -2,14 +2,16 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>マイクラ投票サイト</title>
+  <title>マイクラサーバー投票サイト</title>
   <style>
     body { font-family: sans-serif; text-align: center; margin-top: 50px; }
     button { padding: 15px 30px; font-size: 20px; cursor: pointer; }
+    input { padding: 10px; font-size: 16px; }
   </style>
 </head>
 <body>
-  <h1>マイクラサーバー投票</h1>
+  <h1>マイクラサーバー投票サイト</h1>
+  <p>ユーザー名を入力して投票してください（1日1回まで）</p>
   <input type="text" id="username" placeholder="ユーザー名" />
   <br><br>
   <button id="voteBtn">投票する</button>
@@ -21,20 +23,21 @@
     voteBtn.addEventListener('click', async () => {
       const username = usernameInput.value.trim() || "名無し";
 
+      // 24時間投票制限
       const lastVote = localStorage.getItem('lastVote');
       const now = new Date().getTime();
-
       if (lastVote && now - lastVote < 24*60*60*1000) {
         alert("今日はもう投票済みです。");
         return;
       }
 
       try {
-        const res = await fetch('https://vote.takkunmcjp.workers.dev/', {
+        const res = await fetch('https://vote.takkunmcjp.workers.dev/', { // Worker URL
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ username })
         });
+
         const json = await res.json();
         if (json.success) {
           localStorage.setItem('lastVote', now);
@@ -43,8 +46,8 @@
           alert("投票に失敗しました。");
         }
       } catch (err) {
-        alert("エラーが発生しました。");
         console.error(err);
+        alert("エラーが発生しました。");
       }
     });
   </script>
