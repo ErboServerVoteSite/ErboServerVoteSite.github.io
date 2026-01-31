@@ -30,7 +30,7 @@
       }
 
       try {
-        const res = await fetch('YOUR_CLOUDFLARE_WORKER_URL_HERE', {
+        const res = await fetch('https://vote.takkunmcjp.workers.dev/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ username })
